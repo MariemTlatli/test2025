@@ -34,6 +34,7 @@ enum Tech {
   MOBILE
   PROBLEM_SOLVING
   UI_UX
+  SECURITY
   OTHER
 }
 
@@ -81,9 +82,9 @@ model Attendee {
 model Ticket {
   ticketNo String  @id
   done     Boolean @default(false)
-  hadMeal  Boolean @default(false)
-  hadLunch Boolean @default(false)
-
+  hadMeal  Boolean @default(false)  
+  hadLunch  Boolean @default(false)
+  
   attendee   Attendee?           @relation("AttendeeToTicket")
   workshops  WorkshopsByTicket[] @relation()
   workshopId String?
@@ -94,6 +95,7 @@ model Ticket {
 
 model WorkshopsByTicket {
   hasAttended Boolean @default(false)
+  hasCertification  Boolean @default(false) 
 
   ticketId String
   ticket   Ticket @relation(fields: [ticketId], references: [ticketNo], onDelete: Cascade)
@@ -131,14 +133,13 @@ model ChallengesByTeam {
 }
 
 model Challenge {
-  id          Int     @id @default(autoincrement())
-  name        String
-  number      Int
-  points      Int
-  description String
-  key         String?
-  hint        String?
-  
+  id               Int                @id @default(autoincrement())
+  name             String
+  number           Int                @unique
+  points           Int
+  description      String              @db.MediumText
+  key              String?            
+  hint             String?
   tech             Tech?
   challengesByTeam ChallengesByTeam[] @relation("TeamChallenges")
 
@@ -154,6 +155,7 @@ model Domaine {
 }
 
 model Controle {
-  id       Int     @id @default(autoincrement())
-  isFrozen Boolean @default(false)
+   id Int     @id  @db.TinyInt @default(autoincrement())
+  isFrozen  Boolean    @default(false)
 }
+
